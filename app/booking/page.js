@@ -107,7 +107,7 @@ export default function BookingSystem() {
 
     const resetForm = () => setFormData({ name: '', email: '', password: '', phone: '', date: '', guests: '', eventType: '', location: '', description: '' });
 
-    const userBookings = bookings.filter(b => b.email === currentUser ? .email);
+    const userBookings = bookings.filter(b => currentUser && b.email === currentUser.email);
     const lastUserBooking = () => userBookings[userBookings.length - 1];
 
     return ( <
@@ -236,7 +236,9 @@ export default function BookingSystem() {
                 option > Birthday < /option> <
                 option > Corporate < /option> <
                 option > Anniversary < /option> <
-                /select> <
+                /select>
+
+                <
                 select name = "location"
                 value = { formData.location }
                 onChange = { handleChange }
@@ -247,12 +249,15 @@ export default function BookingSystem() {
                 option > Destination Wedding < /option> <
                 option > Outdoor Garden < /option> <
                 option > Home Setup < /option> <
-                /select> <
+                /select>
+
+                <
                 textarea name = "description"
                 placeholder = "Description"
                 value = { formData.description }
                 onChange = { handleChange }
-                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" / >
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" > < /textarea>
+
                 <
                 div className = "flex gap-4 mt-4" >
                 <
@@ -283,16 +288,20 @@ export default function BookingSystem() {
                                 on { b.date }
                                 at { b.location }(Guests: { b.guests }) < /p> <
                                 p className = "mt-1 text-sm text-gray-300" > { b.description } < /p> {
-                                    b.id === lastUserBooking() ? .id && ( <
+                                    lastUserBooking() && b.id === lastUserBooking().id && ( <
                                         button onClick = {
                                             () => {
                                                 setFormData(b);
                                                 setView('booking');
                                             }
                                         }
-                                        className = "mt-2 bg-yellow-500 hover:bg-yellow-600 px-4 py-1 rounded" > Update < /button>
+                                        className = "mt-2 bg-yellow-500 hover:bg-yellow-600 px-4 py-1 rounded" >
+                                        Update <
+                                        /button>
                                     )
-                                } <
+                                }
+
+                                <
                                 /li>
                             ))
                         } <

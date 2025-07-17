@@ -1,6 +1,7 @@
 'use client';
 import Head from 'next/head';
 import { useState } from 'react';
+import Image from 'next/image';
 
 const eventData = [{
         title: 'Wedding',
@@ -81,8 +82,10 @@ export default function Gallery() {
                 /h2> <
                 div className = "relative group" >
                 <
-                img src = { event.images[currentIndexes[i]] }
+                Image src = { event.images[currentIndexes[i]] }
                 alt = { event.title }
+                width = { 600 }
+                height = { 256 }
                 className = "w-full h-64 object-cover rounded" /
                 >
                 <
