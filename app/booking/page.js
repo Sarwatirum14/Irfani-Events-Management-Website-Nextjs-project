@@ -178,7 +178,7 @@ export default function BookingSystem() {
             view === 'dashboard' && ( <
                 div >
                 <
-                h2 className = "text-3xl font-bold text-center" > Welcome, { currentUser ? .name } < /h2> <
+                h2 className = "text-3xl font-bold text-center" > Welcome < /h2> <
                 div className = "flex flex-col gap-4 mt-4" >
                 <
                 button onClick = {
