@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import Image from 'next/image';
 
 export default function Contact() {
     const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -24,9 +23,7 @@ export default function Contact() {
         <
         h1 className = "text-5xl font-bold" > Contact IRFANI Events < /h1> <
         /div> <
-        /header>
-
-        <
+        /header> <
         section className = "flex flex-col md:flex-row justify-between p-10 bg-black text-white" >
         <
         div className = "md:w-1/2 p-5 justify-center mt-20" >
@@ -39,47 +36,41 @@ export default function Contact() {
         value = { form.name }
         onChange = { handleChange }
         placeholder = "Your Name"
-        className = "w-full p-2 border rounded text-black"
-        required /
-        >
+        className = "w-full p-2 border rounded"
+        required / >
         <
         input name = "email"
-        type = "email"
         value = { form.email }
         onChange = { handleChange }
         placeholder = "Your Email"
-        className = "w-full p-2 border rounded text-black"
-        required /
-        >
+        type = "email"
+        className = "w-full p-2 border rounded"
+        required / >
         <
         textarea name = "message"
         value = { form.message }
         onChange = { handleChange }
         placeholder = "Your Message"
-        className = "w-full p-2 border rounded text-black"
+        className = "w-full p-2 border rounded"
         rows = "4"
-        required /
-        >
+        required / >
         <
         button type = "submit"
-        className = "bg-secondary border-2 border-white text-white px-4 py-2 rounded" >
-        Send Message <
-        /button> <
+        className = "bg-secondary border-2 border-white text-white px-4 py-2 rounded" > Send Message < /button> <
         /form> <
-        /div>
-
-        <
-        div className = "relative md:w-1/2 mt-10 md:mt-0" >
+        /div> <
+        div className = "relative md:w-1/2" >
         <
         iframe src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2537.998249848038!2d73.07206992436008!3d33.667946087926914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df95459918a25f%3A0x46495cfc8ce0a1a3!2sI-8%20Markaz%20I%208%20Markaz%20I-8%2C%20Islamabad%2C%20Pakistan!5e1!3m2!1sen!2s!4v1749130039478!5m2!1sen!2s"
-        width = "100%"
+        width = "600"
         height = "450"
         style = {
             { border: 0 } }
-        allowFullScreen loading = "lazy"
-        referrerPolicy = "no-referrer-when-downgrade"
+        allowfullscreen = ""
+        loading = "lazy"
+        referrerpolicy = "no-referrer-when-downgrade"
         className = "rounded-lg border-2 border-gray-300" >
-        < /iframe> <
+        < /iframe>           <
         /div> <
         /section>
 
@@ -92,7 +83,7 @@ export default function Contact() {
         <
         p className = "flex items-center gap-4" >
         <
-        Image src = "/location.webp"
+        img src = "/location.webp"
         height = { 70 }
         width = { 70 }
         alt = "Location" / >
@@ -100,7 +91,7 @@ export default function Contact() {
         /p> <
         p className = "flex items-center gap-4" >
         <
-        Image src = "/phone.jpg"
+        img src = "/phone.jpg"
         height = { 70 }
         width = { 70 }
         alt = "Phone" / >
@@ -108,14 +99,16 @@ export default function Contact() {
         /p> <
         p className = "flex items-center gap-4" >
         <
-        Image src = "/email.jpg"
+        img src = "/email.jpg"
         height = { 70 }
         width = { 70 }
         alt = "Email" / >
         Info @Irfanievents.com <
         /p> <
         /div> <
-        /section> <
+        /section>
+
+        <
         /div>
     );
 }

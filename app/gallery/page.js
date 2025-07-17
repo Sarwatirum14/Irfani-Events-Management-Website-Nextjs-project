@@ -1,6 +1,5 @@
 'use client';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useState } from 'react';
 
 const eventData = [{
@@ -69,19 +68,10 @@ export default function Gallery() {
         /Head> <
         div className = "bg-black text-white min-h-screen p-10" >
         <
-        header className = "relative flex items-center justify-center text-center h-[500px]" >
+        header className = "relative flex items-center justify-center text-center h-[500px] bg-[url('/gallery.jpg')] bg-cover bg-center" >
         <
-        Image src = "/gallery.jpg"
-        alt = "Gallery"
-        fill priority className = "object-cover object-center" /
-        >
-        <
-        h1 className = "relative z-10 text-5xl font-black text-pink-500 bg-black bg-opacity-50 p-4 rounded" >
-        Gallery <
-        /h1> <
-        /header>
-
-        <
+        h1 className = "text-5xl font-black text-pink-500" > Gallery < /h1> <
+        /header> <
         div className = "grid grid-cols-1 md:grid-cols-2 gap-10 mt-10" > {
             eventData.map((event, i) => ( <
                 div key = { event.title }
@@ -91,23 +81,20 @@ export default function Gallery() {
                 /h2> <
                 div className = "relative group" >
                 <
-                div className = "relative w-full h-64" >
-                <
-                Image src = { event.images[currentIndexes[i]] }
+                img src = { event.images[currentIndexes[i]] }
                 alt = { event.title }
-                fill className = "object-cover rounded" /
+                className = "w-full h-64 object-cover rounded" /
                 >
                 <
-                /div> <
                 button onClick = {
                     () => handlePrev(i) }
-                className = "absolute left-2 top-1/2 transform -translate-y-1/2 text-white text-3xl bg-black bg-opacity-50 hover:bg-opacity-80 rounded-full px-3 py-1 z-10" >
+                className = "absolute left-2 top-1/2 transform -translate-y-1/2 text-white text-3xl bg-black bg-opacity-50 hover:bg-opacity-80 rounded-full px-3 py-1" >
                 ‹
                 <
                 /button> <
                 button onClick = {
                     () => handleNext(i) }
-                className = "absolute right-2 top-1/2 transform -translate-y-1/2 text-white text-3xl bg-black bg-opacity-50 hover:bg-opacity-80 rounded-full px-3 py-1 z-10" >
+                className = "absolute right-2 top-1/2 transform -translate-y-1/2 text-white text-3xl bg-black bg-opacity-50 hover:bg-opacity-80 rounded-full px-3 py-1" >
                 ›
                 <
                 /button> <

@@ -1,118 +1,96 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export default function BookingSystem() {
-    const [view, setView] = useState("login");
+    const [view, setView] = useState('login');
     const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        phone: "",
-        date: "",
-        guests: "",
-        eventType: "",
-        location: "",
-        description: ""
+        name: '',
+        email: '',
+        password: '',
+        phone: '',
+        date: '',
+        guests: '',
+        eventType: '',
+        location: '',
+        description: ''
     });
-
     const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
-            const storedBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
-            setUsers(storedUsers);
-            setBookings(storedBookings);
-        }
+        const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        const storedBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+        setUsers(storedUsers);
+        setBookings(storedBookings);
     }, []);
 
-    const handleChange = (e) =>
-        setFormData({...formData, [e.target.name]: e.target.value });
+    const handleChange = (e) => setFormData({...formData, [e.target.name]: e.target.value });
 
     const handleSignup = () => {
-        if (!formData.name || !formData.email || !formData.password)
-            return alert("All fields required.");
-        if (!/^[A-Za-z\s]+$/.test(formData.name))
-            return alert("Name should contain only letters and spaces.");
-        const exists = users.find((u) => u.email === formData.email);
-        if (exists) return alert("User already exists.");
-        const newUser = {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password
-        };
+        if (!formData.name || !formData.email || !formData.password) return alert('All fields required.');
+        if (!/^[A-Za-z\s]+$/.test(formData.name)) return alert('Name should contain only letters and spaces.');
+        const exists = users.find(u => u.email === formData.email);
+        if (exists) return alert('User already exists.');
+        const newUser = { name: formData.name, email: formData.email, password: formData.password };
         const updatedUsers = [...users, newUser];
         setUsers(updatedUsers);
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
-        alert("Signup successful! Please login.");
+        localStorage.setItem('users', JSON.stringify(updatedUsers));
+        alert('Signup successful! Please login.');
         resetForm();
-        setView("login");
+        setView('login');
     };
 
     const handleLogin = () => {
-        const user = users.find(
-            (u) => u.email === formData.email && u.password === formData.password
-        );
-        if (!user) return alert("Invalid credentials or not signed up.");
+        const user = users.find(u => u.email === formData.email && u.password === formData.password);
+        if (!user) return alert('Invalid credentials or not signed up.');
         setCurrentUser(user);
         resetForm();
-        setView("dashboard");
+        setView('dashboard');
     };
 
     const handleLogout = () => {
         setCurrentUser(null);
-        setView("login");
+        setView('login');
     };
 
     const handleBookingSubmit = async() => {
-        const requiredFields = [
-            "name",
-            "phone",
-            "date",
-            "guests",
-            "eventType",
-            "location"
-        ];
-        const empty = requiredFields.some((field) => !formData[field]);
-        if (empty) return alert("Please fill all fields before submitting.");
-        if (!/^[A-Za-z\s]+$/.test(formData.name))
-            return alert("Name should contain only letters and spaces.");
-        if (!/^\d+$/.test(formData.phone))
-            return alert("Phone number should contain only digits.");
+        const requiredFields = ['name', 'phone', 'date', 'guests', 'eventType', 'location'];
+        const empty = requiredFields.some(field => !formData[field]);
+        if (empty) return alert('Please fill all fields before submitting.');
+        if (!/^[A-Za-z\s]+$/.test(formData.name)) return alert('Name should contain only letters and spaces.');
+        if (!/^\d+$/.test(formData.phone)) return alert('Phone number should contain only digits.');
 
-        const today = new Date().toISOString().split("T")[0];
-        if (formData.date <= today)
-            return alert("Please select a future date for booking.");
+        const today = new Date().toISOString().split('T')[0];
+        if (formData.date <= today) return alert('Please select a future date for booking.');
 
+        const { _id, id, ...formDataWithoutId } = formData;
         const booking = {
-            ...formData,
-            id: typeof crypto !== "undefined" ? crypto.randomUUID() : Math.random().toString(36).substr(2, 9),
+            ...formDataWithoutId,
             email: currentUser.email,
             createdAt: new Date().toISOString()
         };
 
         try {
-            const res = await fetch("/api/bookings", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const res = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(booking)
             });
 
             if (!res.ok) {
                 const errorData = await res.json();
-                throw new Error(errorData.message || "Failed to submit booking.");
+                throw new Error(errorData.message || 'Failed to submit booking.');
             }
 
             const savedBooking = await res.json();
             const newBookings = [...bookings, savedBooking];
             setBookings(newBookings);
-            localStorage.setItem("bookings", JSON.stringify(newBookings));
-            alert("Booking submitted.");
+            localStorage.setItem('bookings', JSON.stringify(newBookings));
+            alert('Booking submitted.');
             resetForm();
-            setView("viewBookings");
+            setView('viewBookings');
         } catch (err) {
             console.error(err);
             alert(`Error: ${err.message}`);
@@ -120,233 +98,214 @@ export default function BookingSystem() {
     };
 
     const handleBookingUpdate = () => {
-        const lastBooking = lastUserBooking(); // safely store result
-        const updated = bookings.map((b) =>
-            lastBooking && b.id === lastBooking.id ? {...b, ...formData } : b
-        );
+        const updated = bookings.map(b => b.id === lastUserBooking().id ? {...b, ...formData } : b);
         setBookings(updated);
-        localStorage.setItem("bookings", JSON.stringify(updated));
-        alert("Booking updated.");
-        setView("viewBookings");
+        localStorage.setItem('bookings', JSON.stringify(updated));
+        alert('Booking updated.');
+        setView('viewBookings');
     };
 
+    const resetForm = () => setFormData({ name: '', email: '', password: '', phone: '', date: '', guests: '', eventType: '', location: '', description: '' });
 
-    const resetForm = () =>
-        setFormData({
-            name: "",
-            email: "",
-            password: "",
-            phone: "",
-            date: "",
-            guests: "",
-            eventType: "",
-            location: "",
-            description: ""
-        });
-
-    const userBookings =
-        currentUser && currentUser.email ?
-        bookings.filter((b) => b.email === currentUser.email) :
-        [];
+    const userBookings = bookings.filter(b => b.email === currentUser ? .email);
     const lastUserBooking = () => userBookings[userBookings.length - 1];
 
-    // ✅ Renders based on view
     return ( <
-        main style = {
-            { padding: "2rem", fontFamily: "sans-serif" } } > {
-            view === "login" && ( <
+        div className = "min-h-screen bg-[url('/back7.webp')] bg-cover bg-center flex items-center justify-center px-4 py-20" >
+        <
+        div className = "max-w-2xl bg-black/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl text-white space-y-8" > {
+            view === 'login' && ( <
                 >
                 <
-                h2 > Login < /h2> <
+                h2 className = "text-3xl font-bold text-center" > Login < /h2> <
                 input name = "email"
                 placeholder = "Email"
                 onChange = { handleChange }
-                /> <
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded" / >
+                <
                 input name = "password"
-                placeholder = "Password"
                 type = "password"
+                placeholder = "Password"
                 onChange = { handleChange }
-                /> <
-                button onClick = { handleLogin } > Login < /button> <
-                p >
-                No account ? < button onClick = {
-                    () => setView("signup") } > Sign up < /button> <
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded" / >
+                <
+                button onClick = { handleLogin }
+                className = "bg-pink-500 hover:bg-pink-600 w-full py-2 rounded mt-2" > Login < /button> <
+                p className = "text-sm text-center mt-4 text-gray-400" >
+                Don & apos; t have an account ? { ' ' } <
+                button onClick = {
+                    () => setView('signup') }
+                className = "text-pink-400 underline" > Sign Up < /button> <
                 /p> <
                 />
             )
         }
 
         {
-            view === "signup" && ( <
+            view === 'signup' && ( <
                 >
                 <
-                h2 > Signup < /h2> <
+                h2 className = "text-3xl font-bold text-center" > Sign Up < /h2> <
                 input name = "name"
                 placeholder = "Name"
                 onChange = { handleChange }
-                /> <
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded" / >
+                <
                 input name = "email"
                 placeholder = "Email"
                 onChange = { handleChange }
-                /> <
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded" / >
+                <
                 input name = "password"
-                placeholder = "Password"
                 type = "password"
+                placeholder = "Password"
                 onChange = { handleChange }
-                /> <
-                button onClick = { handleSignup } > Sign Up < /button> <
-                p >
-                Already have an account ? { " " } <
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded" / >
+                <
+                button onClick = { handleSignup }
+                className = "bg-yellow-500 hover:bg-yellow-600 w-full py-2 rounded mt-2" > Sign Up < /button> <
+                p className = "text-sm text-center mt-4 text-gray-400" >
+                Already have an account ? { ' ' } <
                 button onClick = {
-                    () => setView("login") } > Login < /button> <
+                    () => setView('login') }
+                className = "text-pink-400 underline" > Login < /button> <
                 /p> <
                 />
             )
         }
 
         {
-            view === "dashboard" && ( <
-                >
+            view === 'dashboard' && ( <
+                div >
                 <
-                h2 > Welcome, { currentUser ? .name } < /h2> <
+                h2 className = "text-3xl font-bold text-center" > Welcome, { currentUser ? .name } < /h2> <
+                div className = "flex flex-col gap-4 mt-4" >
+                <
                 button onClick = {
-                    () => setView("book") } > Book Event < /button> <
+                    () => setView('booking') }
+                className = "bg-pink-500 hover:bg-pink-600 py-2 rounded" > Book an Event < /button> <
                 button onClick = {
-                    () => setView("viewBookings") } > View My Bookings < /button> <
-                button onClick = { handleLogout } > Logout < /button> <
-                />
+                    () => setView('viewBookings') }
+                className = "bg-gray-700 hover:bg-gray-600 py-2 rounded" > See My Bookings < /button> <
+                button onClick = { handleLogout }
+                className = "bg-red-500 hover:bg-red-600 py-2 rounded" > Logout < /button> <
+                /div> <
+                /div>
             )
         }
 
         {
-            view === "book" && ( <
+            view === 'booking' && ( <
                 >
                 <
-                h2 > Book Your Event < /h2> <
+                h2 className = "text-3xl font-bold text-center" > Booking Form < /h2> <
                 input name = "name"
                 placeholder = "Name"
-                onChange = { handleChange }
-                /> <
-                input name = "phone"
-                placeholder = "Phone"
-                onChange = { handleChange }
-                /> <
-                input name = "date"
-                type = "date"
-                onChange = { handleChange }
-                /> <
-                input name = "guests"
-                placeholder = "Guests"
-                onChange = { handleChange }
-                /> <
-                input name = "eventType"
-                placeholder = "Event Type"
-                onChange = { handleChange }
-                /> <
-                input name = "location"
-                placeholder = "Location"
-                onChange = { handleChange }
-                /> <
-                textarea name = "description"
-                placeholder = "Description"
-                onChange = { handleChange } > < /textarea> <
-                button onClick = { handleBookingSubmit } > Submit Booking < /button> <
-                button onClick = {
-                    () => setView("dashboard") } > Back < /button> <
-                />
-            )
-        }
-
-        {
-            view === "viewBookings" && ( <
-                >
-                <
-                h2 > My Bookings < /h2> {
-                    userBookings.length === 0 ? ( <
-                        p > No bookings yet. < /p>
-                    ) : (
-                        userBookings.map((b) => ( <
-                            div key = { b.id }
-                            style = {
-                                { border: "1px solid #ccc", padding: "1rem", marginBottom: "1rem" } } >
-                            <
-                            p > < strong > Date: < /strong> {b.date}</p >
-                            <
-                            p > < strong > Guests: < /strong> {b.guests}</p >
-                            <
-                            p > < strong > Type: < /strong> {b.eventType}</p >
-                            <
-                            p > < strong > Location: < /strong> {b.location}</p >
-                            <
-                            p > < strong > Description: < /strong> {b.description}</p >
-                            <
-                            /div>
-                        ))
-                    )
-                } <
-                button onClick = {
-                    () => setView("dashboard") } > Back < /button> {
-                    userBookings.length > 0 && ( <
-                        button onClick = {
-                            () => {
-                                const booking = lastUserBooking();
-                                if (booking) {
-                                    setFormData(booking);
-                                    setView("editBooking");
-                                } else {
-                                    alert("No recent booking found.");
-                                }
-                            }
-                        } >
-                        Edit Last Booking <
-                        /button>
-                    )
-                } <
-                />
-            )
-        }
-
-        {
-            view === "editBooking" && ( <
-                >
-                <
-                h2 > Edit Last Booking < /h2> <
-                input name = "name"
                 value = { formData.name }
                 onChange = { handleChange }
-                /> <
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" / >
+                <
                 input name = "phone"
+                placeholder = "Phone"
                 value = { formData.phone }
                 onChange = { handleChange }
-                /> <
-                input name = "date"
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" / >
+                <
+                input type = "date"
+                name = "date"
+                min = { new Date().toISOString().split('T')[0] }
                 value = { formData.date }
                 onChange = { handleChange }
-                /> <
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" /
+                >
+                <
                 input name = "guests"
+                type = "number"
+                placeholder = "Guests"
                 value = { formData.guests }
                 onChange = { handleChange }
-                /> <
-                input name = "eventType"
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" / >
+                <
+                select name = "eventType"
                 value = { formData.eventType }
                 onChange = { handleChange }
-                /> <
-                input name = "location"
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" >
+                <
+                option value = "" > Select Event Type < /option> <
+                option > Wedding < /option> <
+                option > Birthday < /option> <
+                option > Corporate < /option> <
+                option > Anniversary < /option> <
+                /select> <
+                select name = "location"
                 value = { formData.location }
                 onChange = { handleChange }
-                /> <
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" >
+                <
+                option value = "" > Select Location < /option> <
+                option > Banquet Hall < /option> <
+                option > Destination Wedding < /option> <
+                option > Outdoor Garden < /option> <
+                option > Home Setup < /option> <
+                /select> <
                 textarea name = "description"
+                placeholder = "Description"
                 value = { formData.description }
-                onChange = { handleChange } >
-                < /textarea> <
-                button onClick = { handleBookingUpdate } > Update Booking < /button> <
+                onChange = { handleChange }
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" / >
+                <
+                div className = "flex gap-4 mt-4" >
+                <
+                button onClick = { handleBookingSubmit }
+                className = "bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded" > Submit < /button> <
                 button onClick = {
-                    () => setView("viewBookings") } > Cancel < /button> <
+                    () => setView('dashboard') }
+                className = "bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded" > Back < /button> <
+                /div> <
                 />
             )
         }
 
-        <
-        /main>
+        {
+            view === 'viewBookings' && ( <
+                >
+                <
+                h2 className = "text-3xl font-bold text-center" > Your Bookings < /h2> {
+                    userBookings.length === 0 ? ( <
+                        p className = "text-center text-gray-400" > No bookings yet. < /p>
+                    ) : ( <
+                        ul className = "space-y-4" > {
+                            userBookings.map((b) => ( <
+                                li key = { b.id }
+                                className = "bg-[#3a3a3a] border border-gray-600 p-4 rounded" >
+                                <
+                                p className = "text-pink-300 font-semibold" > { b.eventType }
+                                on { b.date }
+                                at { b.location }(Guests: { b.guests }) < /p> <
+                                p className = "mt-1 text-sm text-gray-300" > { b.description } < /p> {
+                                    b.id === lastUserBooking() ? .id && ( <
+                                        button onClick = {
+                                            () => {
+                                                setFormData(b);
+                                                setView('booking');
+                                            }
+                                        }
+                                        className = "mt-2 bg-yellow-500 hover:bg-yellow-600 px-4 py-1 rounded" > Update < /button>
+                                    )
+                                } <
+                                /li>
+                            ))
+                        } <
+                        /ul>
+                    )
+                } <
+                button onClick = {
+                    () => setView('dashboard') }
+                className = "mt-4 bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded w-full" > Back < /button> <
+                />
+            )
+        } <
+        /div> <
+        /div>
     );
 }
