@@ -68,16 +68,16 @@ export default function Home() {
         <
         h2 className = "text-3xl font-semibold mb-4 text-pink-600 text-center" > About Us < /h2> <
         p className = "text-justify" >
-        At IRFANI Event Management, we don 't just plan events — we create unforgettable experiences!
-        Whether it 's a dream wedding, an epic birthday bash, or a standout corporate event,
-        we 've got you covered. From top-notch DJs and live bands to mind-blowing entertainers,
-        we bring the fun and flair to every occasion. <
-        /p> <
-        /div> <
-        /section>
+        At IRFANI Event Management, we don & #39;t just plan events — we create unforgettable experiences!
+              Whether it&# 39; s a dream wedding, an epic birthday bash, or a standout corporate event,
+        we & #39;ve got you covered. From top-notch DJs and live bands to mind-blowing entertainers,
+              we bring the fun and flair to every occasion.
+            </p>
+          </div>
+        </section>
 
-        { /* Events Section */ } <
-        section id = "events"
+        {/* Events Section */}
+        <section id= "events"
         className = "p-10 bg-black text-white" >
         <
         h2 className = "text-3xl font-bold text-center mb-8 text-pink-600" > Events We Manage < /h2> <

@@ -120,14 +120,16 @@ export default function BookingSystem() {
     };
 
     const handleBookingUpdate = () => {
+        const lastBooking = lastUserBooking(); // safely store result
         const updated = bookings.map((b) =>
-            b.id === lastUserBooking() ? .id ? {...b, ...formData } : b
+            lastBooking && b.id === lastBooking.id ? {...b, ...formData } : b
         );
         setBookings(updated);
         localStorage.setItem("bookings", JSON.stringify(updated));
         alert("Booking updated.");
         setView("viewBookings");
     };
+
 
     const resetForm = () =>
         setFormData({
@@ -142,7 +144,10 @@ export default function BookingSystem() {
             description: ""
         });
 
-    const userBookings = bookings.filter((b) => b.email === currentUser ? .email);
+    const userBookings =
+        currentUser && currentUser.email ?
+        bookings.filter((b) => b.email === currentUser.email) :
+        [];
     const lastUserBooking = () => userBookings[userBookings.length - 1];
 
     // ✅ Renders based on view
@@ -244,8 +249,7 @@ export default function BookingSystem() {
                 /> <
                 textarea name = "description"
                 placeholder = "Description"
-                onChange = { handleChange }
-                /> <
+                onChange = { handleChange } > < /textarea> <
                 button onClick = { handleBookingSubmit } > Submit Booking < /button> <
                 button onClick = {
                     () => setView("dashboard") } > Back < /button> <
@@ -286,10 +290,16 @@ export default function BookingSystem() {
                         button onClick = {
                             () => {
                                 const booking = lastUserBooking();
-                                setFormData(booking);
-                                setView("editBooking");
+                                if (booking) {
+                                    setFormData(booking);
+                                    setView("editBooking");
+                                } else {
+                                    alert("No recent booking found.");
+                                }
                             }
-                        } > Edit Last Booking < /button>
+                        } >
+                        Edit Last Booking <
+                        /button>
                     )
                 } <
                 />
@@ -327,14 +337,16 @@ export default function BookingSystem() {
                 /> <
                 textarea name = "description"
                 value = { formData.description }
-                onChange = { handleChange }
-                /> <
+                onChange = { handleChange } >
+                < /textarea> <
                 button onClick = { handleBookingUpdate } > Update Booking < /button> <
                 button onClick = {
                     () => setView("viewBookings") } > Cancel < /button> <
                 />
             )
-        } <
+        }
+
+        <
         /main>
     );
 }
