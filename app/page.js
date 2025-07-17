@@ -1,4 +1,7 @@
+'use client';
+
 import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Home() {
@@ -8,6 +11,9 @@ export default function Home() {
         Head >
         <
         title > Home | IRFANI Events Management < /title> <
+        meta name = "description"
+        content = "IRFANI Events Management - Turning your dreams into reality." / >
+        <
         /Head>
 
         <
@@ -28,15 +34,18 @@ export default function Home() {
         h2 className = "text-3xl font-semibold mb-4 text-pink-600 text-center" >
         Welcome to IRFANI Events Management <
         /h2> <
-        p className = 'text-justify' >
+        p className = "text-justify" >
         We turn your dreams into reality with expert planning and flawless execution.Every event we manage is a perfect blend of creativity, professionalism, and passion.Let us help you create memories that will last a lifetime. <
         /p> <
         /div> <
-        div className = "md:w-1/2" >
+        div className = "md:w-1/2 flex justify-center items-center" >
         <
-        img src = "/welcome.jpg"
-        alt = "Welcome"
-        className = "w-full rounded shadow" / >
+        Image src = "/welcome.jpg"
+        alt = "Welcome to IRFANI"
+        width = { 500 }
+        height = { 350 }
+        className = "rounded shadow" /
+        >
         <
         /div> <
         /section>
@@ -45,24 +54,24 @@ export default function Home() {
         section id = "about"
         className = "flex flex-col md:flex-row-reverse justify-between p-10 bg-black text-white" >
         <
-        div className = "md:w-1/2" >
+        div className = "md:w-1/2 flex justify-center items-center" >
         <
-        img src = "/about.jpg"
-        alt = "About"
-        className = "w-full rounded shadow" / >
+        Image src = "/about.jpg"
+        alt = "About IRFANI"
+        width = { 500 }
+        height = { 350 }
+        className = "rounded shadow" /
+        >
         <
         /div> <
         div className = "md:w-1/2 p-5 mt-10" >
         <
-        h2 className = "text-3xl font-semibold mb-4 text-pink-600 text-center" > About us < /h2> <
-        p className = 'text-justify' >
-        At IRFANI Event Management, we don 't just plan events - we create unforgettable experiences!
+        h2 className = "text-3xl font-semibold mb-4 text-pink-600 text-center" > About Us < /h2> <
+        p className = "text-justify" >
+        At IRFANI Event Management, we don 't just plan events — we create unforgettable experiences!
         Whether it 's a dream wedding, an epic birthday bash, or a standout corporate event,
         we 've got you covered. From top-notch DJs and live bands to mind-blowing entertainers,
-        we bring the fun and flair to every occasion.Our team of experts is dedicated to making your event one
-        for the history books.Ready to make some memories ? Let 's bring
-        your vision to life with IRFANI Event Management!
-        <
+        we bring the fun and flair to every occasion. <
         /p> <
         /div> <
         /section>
@@ -91,9 +100,7 @@ export default function Home() {
             ))
         } <
         /div> <
-        /section>
-
-        <
+        /section> <
         /div> <
         />
     );
