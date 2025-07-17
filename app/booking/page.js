@@ -89,7 +89,7 @@ export default function BookingSystem() {
 
         const booking = {
             ...formData,
-            id: crypto.randomUUID(),
+            id: typeof crypto !== "undefined" ? crypto.randomUUID() : Math.random().toString(36).substr(2, 9),
             email: currentUser.email,
             createdAt: new Date().toISOString()
         };
@@ -121,7 +121,7 @@ export default function BookingSystem() {
 
     const handleBookingUpdate = () => {
         const updated = bookings.map((b) =>
-            b.id === lastUserBooking().id ? {...b, ...formData } : b
+            b.id === lastUserBooking() ? .id ? {...b, ...formData } : b
         );
         setBookings(updated);
         localStorage.setItem("bookings", JSON.stringify(updated));
@@ -145,4 +145,196 @@ export default function BookingSystem() {
     const userBookings = bookings.filter((b) => b.email === currentUser ? .email);
     const lastUserBooking = () => userBookings[userBookings.length - 1];
 
+    // ✅ Renders based on view
+    return ( <
+        main style = {
+            { padding: "2rem", fontFamily: "sans-serif" } } > {
+            view === "login" && ( <
+                >
+                <
+                h2 > Login < /h2> <
+                input name = "email"
+                placeholder = "Email"
+                onChange = { handleChange }
+                /> <
+                input name = "password"
+                placeholder = "Password"
+                type = "password"
+                onChange = { handleChange }
+                /> <
+                button onClick = { handleLogin } > Login < /button> <
+                p >
+                No account ? < button onClick = {
+                    () => setView("signup") } > Sign up < /button> <
+                /p> <
+                />
+            )
+        }
+
+        {
+            view === "signup" && ( <
+                >
+                <
+                h2 > Signup < /h2> <
+                input name = "name"
+                placeholder = "Name"
+                onChange = { handleChange }
+                /> <
+                input name = "email"
+                placeholder = "Email"
+                onChange = { handleChange }
+                /> <
+                input name = "password"
+                placeholder = "Password"
+                type = "password"
+                onChange = { handleChange }
+                /> <
+                button onClick = { handleSignup } > Sign Up < /button> <
+                p >
+                Already have an account ? { " " } <
+                button onClick = {
+                    () => setView("login") } > Login < /button> <
+                /p> <
+                />
+            )
+        }
+
+        {
+            view === "dashboard" && ( <
+                >
+                <
+                h2 > Welcome, { currentUser ? .name } < /h2> <
+                button onClick = {
+                    () => setView("book") } > Book Event < /button> <
+                button onClick = {
+                    () => setView("viewBookings") } > View My Bookings < /button> <
+                button onClick = { handleLogout } > Logout < /button> <
+                />
+            )
+        }
+
+        {
+            view === "book" && ( <
+                >
+                <
+                h2 > Book Your Event < /h2> <
+                input name = "name"
+                placeholder = "Name"
+                onChange = { handleChange }
+                /> <
+                input name = "phone"
+                placeholder = "Phone"
+                onChange = { handleChange }
+                /> <
+                input name = "date"
+                type = "date"
+                onChange = { handleChange }
+                /> <
+                input name = "guests"
+                placeholder = "Guests"
+                onChange = { handleChange }
+                /> <
+                input name = "eventType"
+                placeholder = "Event Type"
+                onChange = { handleChange }
+                /> <
+                input name = "location"
+                placeholder = "Location"
+                onChange = { handleChange }
+                /> <
+                textarea name = "description"
+                placeholder = "Description"
+                onChange = { handleChange }
+                /> <
+                button onClick = { handleBookingSubmit } > Submit Booking < /button> <
+                button onClick = {
+                    () => setView("dashboard") } > Back < /button> <
+                />
+            )
+        }
+
+        {
+            view === "viewBookings" && ( <
+                >
+                <
+                h2 > My Bookings < /h2> {
+                    userBookings.length === 0 ? ( <
+                        p > No bookings yet. < /p>
+                    ) : (
+                        userBookings.map((b) => ( <
+                            div key = { b.id }
+                            style = {
+                                { border: "1px solid #ccc", padding: "1rem", marginBottom: "1rem" } } >
+                            <
+                            p > < strong > Date: < /strong> {b.date}</p >
+                            <
+                            p > < strong > Guests: < /strong> {b.guests}</p >
+                            <
+                            p > < strong > Type: < /strong> {b.eventType}</p >
+                            <
+                            p > < strong > Location: < /strong> {b.location}</p >
+                            <
+                            p > < strong > Description: < /strong> {b.description}</p >
+                            <
+                            /div>
+                        ))
+                    )
+                } <
+                button onClick = {
+                    () => setView("dashboard") } > Back < /button> {
+                    userBookings.length > 0 && ( <
+                        button onClick = {
+                            () => {
+                                const booking = lastUserBooking();
+                                setFormData(booking);
+                                setView("editBooking");
+                            }
+                        } > Edit Last Booking < /button>
+                    )
+                } <
+                />
+            )
+        }
+
+        {
+            view === "editBooking" && ( <
+                >
+                <
+                h2 > Edit Last Booking < /h2> <
+                input name = "name"
+                value = { formData.name }
+                onChange = { handleChange }
+                /> <
+                input name = "phone"
+                value = { formData.phone }
+                onChange = { handleChange }
+                /> <
+                input name = "date"
+                value = { formData.date }
+                onChange = { handleChange }
+                /> <
+                input name = "guests"
+                value = { formData.guests }
+                onChange = { handleChange }
+                /> <
+                input name = "eventType"
+                value = { formData.eventType }
+                onChange = { handleChange }
+                /> <
+                input name = "location"
+                value = { formData.location }
+                onChange = { handleChange }
+                /> <
+                textarea name = "description"
+                value = { formData.description }
+                onChange = { handleChange }
+                /> <
+                button onClick = { handleBookingUpdate } > Update Booking < /button> <
+                button onClick = {
+                    () => setView("viewBookings") } > Cancel < /button> <
+                />
+            )
+        } <
+        /main>
+    );
 }
