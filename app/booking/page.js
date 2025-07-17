@@ -256,17 +256,24 @@ export default function BookingSystem() {
                 placeholder = "Description"
                 value = { formData.description }
                 onChange = { handleChange }
-                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" > < /textarea>
+                className = "bg-[#1a1a1a] border border-gray-600 p-3 w-full rounded mb-2" >
+                < /textarea>
 
                 <
                 div className = "flex gap-4 mt-4" >
                 <
                 button onClick = { handleBookingSubmit }
-                className = "bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded" > Submit < /button> <
+                className = "bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded" >
+                Submit <
+                /button> <
                 button onClick = {
                     () => setView('dashboard') }
-                className = "bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded" > Back < /button> <
-                /div> <
+                className = "bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded" >
+                Back <
+                /button> <
+                /div>
+
+                <
                 />
             )
         }
